@@ -46,12 +46,11 @@ export default function PharmacyPortal() {
     setDispensingId(record.timestamp);
     try {
       const payload = {
-        timestamp: record.timestamp,
-        raw_transcript: record.raw_transcript,
-        status: "fulfilled"
+        patient_id: record.patient_id,
+        timestamp: record.timestamp
       };
 
-      const res = await fetch("http://localhost:8000/api/update-status", {
+      const res = await fetch("http://localhost:8000/api/dispense-prescription", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

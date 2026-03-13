@@ -7,5 +7,6 @@
     "lab_tests": [],
     "raw_transcript": "Yes.",
     "timestamp": "2026-03-13T10:06:41.414848",
-    "status": "pending_pharmacy"
+    "status": "dispensed",
+    "pharmacy_status": "dispensed"
 }

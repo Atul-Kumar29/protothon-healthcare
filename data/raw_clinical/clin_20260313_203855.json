@@ -1,0 +1,12 @@
+{
+    "patient_id": "PAT-992",
+    "symptoms": [],
+    "diagnosis": "paractimol",
+    "medication": "tablet",
+    "dosage": "3 times a day",
+    "lab_tests": [],
+    "raw_transcript": "Doctor: What problem do you have?\nPatient: My stomach is hurting.\nDoctor: From when it\nPatient: From tomorrow morning.",
+    "timestamp": "2026-03-13T15:08:55.611744",
+    "status": "dispensed",
+    "pharmacy_status": "dispensed"
+}

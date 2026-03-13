@@ -1,0 +1,16 @@
+{
+    "patient_id": "PAT-001",
+    "symptoms": [
+        "fever (for 5 days, very severe)"
+    ],
+    "diagnosis": "Pending",
+    "medication": "None",
+    "dosage": "None",
+    "lab_tests": [
+        "Blood Test - Pending Laboratory"
+    ],
+    "raw_transcript": "Doctor: \u0ca8\u0cae\u0cb8\u0ccd\u0c95\u0cbe\u0cb0, \u0ca8\u0cbf\u0cae\u0c97\u0cc6 \u0caf\u0cbe\u0cb5 \u0cb8\u0cae\u0cb8\u0ccd\u0caf\u0cc6 \u0c87\u0ca6\u0cc6?\nPatient: I have five days.\nPatient: I have had a fever for five days.\nDoctor: \u0c85\u0cb5\u0cb0\u0cc1 \u0cb9\u0cc7\u0c97\u0cbf\u0ca6\u0ccd\u0ca6\u0cbe\u0cb0\u0cc6?\nPatient: It was very severe.",
+    "timestamp": "2026-03-13T16:14:07.445451",
+    "status": "dispensed",
+    "pharmacy_status": "dispensed"
+}

@@ -1,0 +1,19 @@
+{
+    "patient_id": "PAT-001",
+    "symptoms": [
+        "very high fever (for 3 days)",
+        "fever 110 degrees Fahrenheit (yesterday and today)",
+        "red rash",
+        "mosquito exposure"
+    ],
+    "diagnosis": "Malaria (suspected)",
+    "medication": "None",
+    "dosage": "None",
+    "lab_tests": [
+        "Blood Test - Pending Laboratory"
+    ],
+    "raw_transcript": "Doctor: \u0cb6\u0cc1\u0cad\u0ccb\u0ca6\u0caf, \u0c87\u0c82\u0ca6\u0cc1 \u0ca4\u0cbe\u0cb5\u0cc1 \u0c8f\u0ca8\u0cc1 \u0ca4\u0c82\u0ca6\u0cbf\u0ca6\u0ccd\u0ca6\u0cc0\u0cb0\u0cbf?\nPatient: I had a very high fever for three days.\nDoctor: \u0ca4\u0cbe\u0caa\u0cae\u0cbe\u0ca8\u0cb5\u0ca8\u0ccd\u0ca8\u0cc1 \u0c85\u0cb3\u0cc6\u0caf\u0cc1\u0cb5\u0cc1\u0ca6\u0cc1 \u0cb9\u0cc7\u0c97\u0cc6 \u0c8e\u0c82\u0ca6\u0cc1 \u0ca8\u0cbf\u0cae\u0c97\u0cc6 \u0ca4\u0cbf\u0cb3\u0cbf\u0ca6\u0cbf\u0ca6\u0cc6\u0caf\u0cc7?\nPatient: Yesterday it was 110 degrees Fahrenheit. Today also it is the same.\nDoctor: \u0ca8\u0cbf\u0cae\u0c97\u0cc6 \u0cac\u0cc7\u0cb0\u0cc6 \u0c8f\u0ca8\u0cbe\u0ca6\u0cb0\u0cc2 \u0cb2\u0c95\u0ccd\u0cb7\u0ca3\u0c97\u0cb3\u0cc1 \u0c95\u0cbe\u0ca3\u0cbf\u0cb8\u0cc1\u0ca4\u0ccd\u0ca4\u0cbf\u0cb5\u0cc6\u0caf\u0cc7?\nPatient: Yes, I had a red rash.\nDoctor: \u0cb8\u0cb0\u0cbf, \u0ca8\u0cbf\u0cae\u0ccd\u0cae \u0cae\u0ca8\u0cc6\u0caf \u0cb9\u0ca4\u0ccd\u0ca4\u0cbf\u0cb0 \u0c95\u0cbf\u0c9f\u0ccb\u0cb8\u0ccd \u0c87\u0ca6\u0cc6.\nPatient: Yes, it was a very good vehicle.\nPatient: So many mosquitoes were there.\nDoctor: \u0ca8\u0cbf\u0cae\u0ccd\u0cae \u0cb0\u0ccb\u0c97\u0cb2\u0c95\u0ccd\u0cb7\u0ca3\u0c97\u0cb3\u0ca8\u0ccd\u0ca8\u0cc1 \u0c97\u0cae\u0ca8\u0cbf\u0cb8\u0cbf\u0ca6\u0cb0\u0cc6, \u0c85\u0ca6\u0cc1 \u0cae\u0cb2\u0cc7\u0cb0\u0cbf\u0caf\u0cbe \u0c8e\u0c82\u0ca6\u0cc1 \u0ca4\u0ccb\u0cb0\u0cc1\u0ca4\u0ccd\u0ca4\u0ca6\u0cc6.",
+    "timestamp": "2026-03-13T18:45:40.894948",
+    "status": "dispensed",
+    "pharmacy_status": "dispensed"
+}

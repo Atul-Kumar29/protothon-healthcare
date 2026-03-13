@@ -1,0 +1,14 @@
+{
+    "patient_id": "PAT-002",
+    "symptoms": [
+        "fever"
+    ],
+    "diagnosis": "feaver",
+    "medication": "pracetomol",
+    "dosage": "2 rtimes a day for 2 days",
+    "lab_tests": [],
+    "raw_transcript": "Doctor: \u0ca8\u0cbf\u0cae\u0c97\u0cc6 \u0c8f\u0ca8\u0cc1 \u0cb8\u0cae\u0cb8\u0ccd\u0caf\u0cc6 \u0c87\u0ca6\u0cc6?\nPatient: I have had a fever for five days.",
+    "timestamp": "2026-03-13T16:41:47.284345",
+    "status": "dispensed",
+    "pharmacy_status": "dispensed"
+}

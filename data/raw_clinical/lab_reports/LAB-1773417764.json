@@ -1,0 +1,21 @@
+{
+    "report_id": "LAB-1773417764",
+    "patient_id": "PAT-699",
+    "report_type": "General Blood Test",
+    "date": "2026-03-13",
+    "file_path": null,
+    "lab_tests": [
+        {
+            "test_name": "Sugar",
+            "value": "",
+            "normal_range": "70-120",
+            "status": "HIGH"
+        },
+        {
+            "test_name": "Hemoglobin",
+            "value": "",
+            "normal_range": "12-16",
+            "status": "NORMAL"
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "patient_id": "PAT-992",
+    "symptoms": [
+        "stomach fullness",
+        "leg pain"
+    ],
+    "diagnosis": "Pending",
+    "medication": "tablet",
+    "dosage": "None",
+    "lab_tests": [],
+    "raw_transcript": "Doctor: Hello, how are you?\nPatient: My stomach is, my stomach is full.\nDoctor: Eat the tablet.\nPatient: I am also having pain in my leg.",
+    "timestamp": "2026-03-13T15:06:44.815905",
+    "status": "dispensed",
+    "pharmacy_status": "dispensed"
+}

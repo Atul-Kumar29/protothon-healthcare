@@ -1,0 +1,14 @@
+{
+    "patient_id": "PAT-002",
+    "symptoms": [
+        "stomach ache"
+    ],
+    "diagnosis": "feaver",
+    "medication": "paracetomol",
+    "dosage": "2 days",
+    "lab_tests": [],
+    "raw_transcript": "Doctor: \u0ca8\u0cae\u0cb8\u0ccd\u0c95\u0cbe\u0cb0 \u0c92\u0c82\u0ca6\u0cc1.\nPatient: I have been having a stomach ache for five days. I was sleeping. I will work on one o'clock.",
+    "timestamp": "2026-03-13T17:24:36.324749",
+    "status": "dispensed",
+    "pharmacy_status": "dispensed"
+}

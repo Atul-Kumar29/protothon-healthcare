@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Stethoscope, User, Pill, ArrowRight, Loader2 } from "lucide-react";
+import { Stethoscope, User, Pill, FlaskConical, ArrowRight, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -94,6 +94,23 @@ export default function LoginPage() {
               <div className="text-left">
                 <p className="font-semibold">Pharmacy Portal</p>
                 <p className="text-xs text-neutral-500">Dispense & Queue</p>
+              </div>
+            </div>
+            {loading ? <Loader2 className="w-5 h-5 text-neutral-500 animate-spin" /> : <ArrowRight className="w-5 h-5 text-neutral-500 group-hover:text-neutral-300 transform group-hover:translate-x-1 transition-all" />}
+          </button>
+
+          <button
+            onClick={() => handleLogin("LAB-01", "laboratory")}
+            disabled={loading}
+            className="flex items-center justify-between w-full p-4 rounded-xl bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 hover:border-neutral-700 transition-all group disabled:opacity-50"
+          >
+            <div className="flex items-center gap-4 text-neutral-200">
+              <div className="p-2 bg-indigo-900/30 text-indigo-400 rounded-lg">
+                <FlaskConical className="w-6 h-6" />
+              </div>
+              <div className="text-left">
+                <p className="font-semibold">Laboratory Portal</p>
+                <p className="text-xs text-neutral-500">Upload & Analyze Reports</p>
               </div>
             </div>
             {loading ? <Loader2 className="w-5 h-5 text-neutral-500 animate-spin" /> : <ArrowRight className="w-5 h-5 text-neutral-500 group-hover:text-neutral-300 transform group-hover:translate-x-1 transition-all" />}

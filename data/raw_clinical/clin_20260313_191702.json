@@ -10,5 +10,6 @@
     "lab_tests": [],
     "raw_transcript": "Doctor: What kind of problem are you facing?\nPatient: I have a severe stomach ache.\nDoctor: Where are you facing the stomach ache?\nPatient: Near my heart area.\nDoctor: Then it might be gas problem.",
     "timestamp": "2026-03-13T13:47:02.993598",
-    "status": "pending_pharmacy"
+    "status": "dispensed",
+    "pharmacy_status": "dispensed"
 }

@@ -4,6 +4,7 @@ import os
 import requests
 import json
 import subprocess
+import time
 import pandas as pd
 from datetime import datetime
 from dotenv import load_dotenv
@@ -14,6 +15,7 @@ from google import genai
 load_dotenv()
 
 app = FastAPI(title="VeriTrust Health - Unified Clinical Gateway")
+print("[DEBUG] FastAPI app initialized. /api/dispense-prescription is ACTIVE.")
 
 # Allow your teammates' Next.js frontend to talk to your laptop
 app.add_middleware(
@@ -39,12 +41,17 @@ USERS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data'
 os.makedirs(USERS_DIR, exist_ok=True)
 AUDIT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data', 'delta_lake_audit'))
 os.makedirs(AUDIT_DIR, exist_ok=True)
+LAB_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data', 'raw_clinical', 'lab_reports'))
+os.makedirs(LAB_DIR, exist_ok=True)
+LAB_REQUEST_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data', 'raw_clinical', 'lab_requests'))
+os.makedirs(LAB_REQUEST_DIR, exist_ok=True)
 
 # Define mock users (kept simple to avoid parquet/arrow issues for auth)
 MOCK_USERS = [
     {"user_id": "DOC-001", "role": "doctor"},
     {"user_id": "PAT-992", "role": "patient"},
     {"user_id": "PHARM-01", "role": "pharmacy"},
+    {"user_id": "LAB-01", "role": "laboratory"},
 ]
 
 class LoginRequest(BaseModel):
@@ -69,6 +76,24 @@ class UpdateStatusRequest(BaseModel):
     timestamp: str
     raw_transcript: str
     status: str
+
+class DispenseRequest(BaseModel):
+    patient_id: str
+    timestamp: str
+
+class LabTestResult(BaseModel):
+    test_name: str
+    value: str
+    normal_range: str
+    status: str
+
+class AnalyzeLabRequest(BaseModel):
+    lab_tests: list[LabTestResult]
+
+class LabRequest(BaseModel):
+    patient_id: str
+    test_type: str
+    requested_by: Optional[str] = "DOC-001"
 
 def trigger_spark_job():
     """Executes the Spark batch job inside the Docker container."""
@@ -109,6 +134,80 @@ def login(req: LoginRequest):
         if user["user_id"] == req.user_id:
             return {"status": "success", "user": user}
     raise HTTPException(status_code=401, detail="User not found")
+
+@app.post("/api/dispense-prescription")
+def dispense_prescription(req: DispenseRequest):
+    """
+    Pharmacy marks prescription as dispensed. 
+    Matches by patient_id only as requested.
+    """
+    print(f"[DEBUG] Dispensing called: Patient={req.patient_id}")
+    
+    clin_test_path = os.path.join(DATA_DIR, "clin_test.json")
+    updated = False
+
+    # Ensure DATA_DIR exists
+    os.makedirs(DATA_DIR, exist_ok=True)
+
+    # 4. If the file is empty or invalid JSON: Automatically initialize it as {}
+    if not os.path.exists(clin_test_path) or os.path.getsize(clin_test_path) == 0:
+        with open(clin_test_path, "w") as f:
+            json.dump({}, f)
+    else:
+        try:
+            with open(clin_test_path, "r") as f:
+                json.loads(f.read().strip() or "{}")
+        except:
+            with open(clin_test_path, "w") as f:
+                json.dump({}, f)
+
+    # 2. Search JSON records in data/raw_clinical/
+    for fname in os.listdir(DATA_DIR):
+        if fname.endswith(".json"):
+            fpath = os.path.join(DATA_DIR, fname)
+            try:
+                with open(fpath, "r") as f:
+                    content = f.read().strip()
+                    if not content: continue
+                    data = json.loads(content)
+                
+                # 3. Match prescriptions using only patient_id (instead of patient_id + timestamp)
+                # 5. Find the record with matching patient_id
+                if isinstance(data, dict):
+                    if data.get("patient_id") == req.patient_id:
+                        # 4/6. Update status
+                        data["status"] = "dispensed"
+                        data["pharmacy_status"] = "dispensed"
+                        # 5/7. Save updated JSON file back to disk
+                        with open(fpath, "w") as f:
+                            json.dump(data, f, indent=4)
+                        updated = True
+                        print(f"[DEBUG] Dispensed prescription in {fname}")
+                elif isinstance(data, list):
+                    file_updated = False
+                    for item in data:
+                        if isinstance(item, dict) and item.get("patient_id") == req.patient_id:
+                            item["status"] = "dispensed"
+                            item["pharmacy_status"] = "dispensed"
+                            file_updated = True
+                            updated = True
+                    if file_updated:
+                        with open(fpath, "w") as f:
+                            json.dump(data, f, indent=4)
+                        print(f"[DEBUG] Dispensed prescription list in {fname}")
+            except Exception as e:
+                print(f"Error processing {fname}: {e}")
+                continue
+
+    # 8. Return response
+    if updated:
+        return {
+            "status": "success",
+            "message": "Prescription dispensed"
+        }
+            
+    # 9. If no record is found return HTTP 404
+    raise HTTPException(status_code=404, detail="Prescription record not found")
 
 @app.post("/upload-audio")
 async def process_clinical_voice(
@@ -250,12 +349,16 @@ def approve_clinical_record(record: ClinicalApproval, background_tasks: Backgrou
     final_data = record.model_dump()
     final_data["timestamp"] = datetime.utcnow().isoformat()
     final_data["status"] = "pending_pharmacy"
+    final_data["pharmacy_status"] = "pending"
     
     with open(file_path, "w") as f:
         json.dump(final_data, f, indent=4)
         
     background_tasks.add_task(trigger_spark_job)
     return {"status": "success", "message": "Record sent to Delta Lake"}
+
+    raise HTTPException(status_code=404, detail="Prescription record not found")
+
 
 
 @app.post("/api/generate-prescription")
@@ -507,7 +610,155 @@ def update_status(req: UpdateStatusRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/upload-lab-report")
+async def upload_lab_report(
+    patient_id: str = Form(...),
+    report_type: str = Form(...),
+    lab_tests: str = Form("[]"),
+    request_id: Optional[str] = Form(None),
+    file: Optional[UploadFile] = File(None)
+):
+    import time
+    file_id = f"LAB-{int(time.time())}"
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    
+    file_path_rel = None
+    if file:
+        file_ext = os.path.splitext(file.filename)[1]
+        file_path_rel = f"lab_reports/lab_{patient_id}_{date_str}{file_ext}"
+        full_file_path = os.path.join(DATA_DIR, file_path_rel)
+        os.makedirs(os.path.dirname(full_file_path), exist_ok=True)
+        with open(full_file_path, "wb") as f:
+            f.write(await file.read())
+            
+    try:
+        parsed_tests = json.loads(lab_tests)
+    except:
+        parsed_tests = []
+            
+    metadata = {
+        "report_id": file_id,
+        "patient_id": patient_id,
+        "report_type": report_type,
+        "date": date_str,
+        "file_path": file_path_rel,
+        "lab_tests": parsed_tests,
+        "request_id": request_id
+    }
+    
+    meta_path = os.path.join(LAB_DIR, f"{file_id}.json")
+    with open(meta_path, "w") as f:
+        json.dump(metadata, f, indent=4)
+
+    # If linked to a request, mark it as Completed
+    if request_id and os.path.exists(LAB_REQUEST_DIR):
+        req_path = os.path.join(LAB_REQUEST_DIR, f"{request_id}.json")
+        if os.path.exists(req_path):
+            with open(req_path, "r") as f:
+                req_data = json.load(f)
+            req_data["status"] = "Completed"
+            with open(req_path, "w") as f:
+                json.dump(req_data, f, indent=4)
+        
+    return {"status": "success", "report": metadata}
+
+@app.get("/api/lab-reports/{patient_id}")
+def get_lab_reports(patient_id: str):
+    reports = []
+    if os.path.exists(LAB_DIR):
+        for fname in os.listdir(LAB_DIR):
+            if fname.endswith(".json"):
+                try:
+                    with open(os.path.join(LAB_DIR, fname), "r") as f:
+                        data = json.load(f)
+                        if data.get("patient_id") == patient_id:
+                            reports.append(data)
+                except:
+                    pass
+    
+    reports.sort(key=lambda x: x.get("date", ""), reverse=True)
+    return reports
+
+@app.post("/api/analyze-lab-report")
+def analyze_lab_report(req: AnalyzeLabRequest):
+    if not genai_client:
+        return {
+            "summary": "AI Gemini is not configured.",
+            "risk_level": "Unknown",
+            "recommendation": "Consult doctor."
+        }
+        
+    tests_str = "\\n".join([f"- {t.test_name}: {t.value} (Normal: {t.normal_range}) - Status: {t.status}" for t in req.lab_tests])
+    
+    prompt = f"""You are a medical AI assistant. Analyze these lab results:
+{tests_str}
+
+Return ONLY a valid JSON object describing the results, with these exact keys:
+{{
+  "summary": "Brief 1-2 sentence medical summary",
+  "risk_level": "Low/Medium/High",
+  "recommendation": "Actionable recommendation"
+}}
+Return ONLY JSON, no other formatting or text."""
+
+    try:
+        res = genai_client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+        )
+        import re
+        json_match = re.search(r"\{.*\}", res.text, re.DOTALL)
+        if json_match:
+            try:
+                parsed = json.loads(json_match.group(0))
+                return parsed
+            except:
+                pass
+        return {"summary": "AI analysis unavailable", "risk_level": "Unknown", "recommendation": "N/A"}
+    except Exception as e:
+        print(f"Gemini Analysis Error: {e}")
+        return {"summary": "AI analysis unavailable", "risk_level": "Unknown", "recommendation": "N/A"}
+
+@app.post("/api/request-lab-test")
+def request_lab_test(req: LabRequest):
+    """Saves a manual lab test request from a doctor"""
+    file_id = f"REQ-{int(time.time())}"
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    
+    metadata = {
+        "request_id": file_id,
+        "patient_id": req.patient_id,
+        "test_type": req.test_type,
+        "requested_by": req.requested_by,
+        "date": date_str,
+        "status": "Pending"
+    }
+    
+    req_path = os.path.join(LAB_REQUEST_DIR, f"{file_id}.json")
+    with open(req_path, "w") as f:
+        json.dump(metadata, f, indent=4)
+        
+    return {"status": "success", "request": metadata}
+
+@app.get("/api/lab-requests")
+def get_lab_requests():
+    """Returns all all pending lab requests"""
+    requests_list = []
+    if os.path.exists(LAB_REQUEST_DIR):
+        for fname in os.listdir(LAB_REQUEST_DIR):
+            if fname.endswith(".json"):
+                try:
+                    with open(os.path.join(LAB_REQUEST_DIR, fname), "r") as f:
+                        data = json.load(f)
+                        if data.get("status") == "Pending":
+                            requests_list.append(data)
+                except:
+                    pass
+    requests_list.sort(key=lambda x: x.get("date", ""), reverse=True)
+    return requests_list
+
 if __name__ == "__main__":
     import uvicorn
     # Running on 0.0.0.0 exposes this to your local network
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # reload=True is enabled for hackathon development speed
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

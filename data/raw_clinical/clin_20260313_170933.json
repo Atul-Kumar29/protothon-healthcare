@@ -7,5 +7,6 @@
     "lab_tests": [],
     "raw_transcript": "Hello, what kind of problem do you face? I had a fever, mild fever, around 100 degrees.",
     "timestamp": "2026-03-13T11:39:33.677294",
-    "status": "pending_pharmacy"
+    "status": "dispensed",
+    "pharmacy_status": "dispensed"
 }

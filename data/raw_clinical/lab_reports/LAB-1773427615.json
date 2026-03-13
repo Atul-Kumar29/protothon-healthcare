@@ -1,0 +1,28 @@
+{
+    "report_id": "LAB-1773427615",
+    "patient_id": "PAT-001",
+    "report_type": "Blood Test",
+    "date": "2026-03-14",
+    "file_path": null,
+    "lab_tests": [
+        {
+            "test_name": "Blood Test",
+            "value": "",
+            "normal_range": "",
+            "status": "HIGH"
+        },
+        {
+            "test_name": "wbc",
+            "value": "",
+            "normal_range": "",
+            "status": "HIGH"
+        },
+        {
+            "test_name": "himoblogonin",
+            "value": "",
+            "normal_range": "",
+            "status": "LOW"
+        }
+    ],
+    "request_id": "REQ-1773427521"
+}

@@ -63,6 +63,7 @@ class ClinicalApproval(BaseModel):
 
 class PrescriptionRequest(BaseModel):
     conversation_text: str
+    patient_id: Optional[str] = None
 
 class UpdateStatusRequest(BaseModel):
     timestamp: str
@@ -125,7 +126,7 @@ async def process_clinical_voice(
         raise HTTPException(status_code=400, detail="Only audio files are allowed")
     
     audio_bytes = await file.read()
-    print(f"[DEBUG] /upload-audio called: speaker='{speaker}', source_lang='{source_lang}'")
+    print(f"[DEBUG] /upload-audio: speaker='{speaker}', src='{source_lang}', target='{target_lang}', patient='{patient_id}'")
     
     # 1. Call Sarvam AI's Speech-to-Text Translate API (Updated for current API)
     url = "https://api.sarvam.ai/speech-to-text-translate"
@@ -141,7 +142,11 @@ async def process_clinical_voice(
     try:
         # Use the correct file format for current Sarvam API
         files = {'file': (file.filename, audio_stream, file.content_type)}
-        data = {'model': 'saaras:v2.5'}
+        # Pass the target language requested by the frontend
+        data = {
+            'model': 'saaras:v2.5',
+            'target_language_code': target_lang 
+        }
         
         response = requests.post(url, headers=headers, files=files, data=data)
         response.raise_for_status()
@@ -154,19 +159,87 @@ async def process_clinical_voice(
             raise HTTPException(status_code=500, detail="Sarvam returned an empty transcript.")
 
         speaker_label = "Doctor" if speaker.lower() == "doctor" else "Patient"
-        line = f"{speaker_label}: {transcript}"
+        
+        # 2. If target_lang is NOT English, we need to translate the English transcript
+        # because saaras:v2.5 (STT-Translate) ONLY translates to English.
+        final_transcript = transcript
+        if target_lang != "en-IN":
+            print(f"[DEBUG] Secondary translation needed: English -> {target_lang}")
+            trans_url = "https://api.sarvam.ai/translate"
+            trans_payload = {
+                "input": transcript,
+                "source_language_code": "en-IN",
+                "target_language_code": target_lang,
+                "model": "mayura:v1"
+            }
+            try:
+                trans_res = requests.post(trans_url, json=trans_payload, headers=headers)
+                trans_res.raise_for_status()
+                final_transcript = trans_res.json().get("translated_text", transcript)
+                print(f"[DEBUG] Translated text: {final_transcript[:50]}...")
+            except Exception as trans_err:
+                print(f"[DEBUG] Secondary translation failed: {trans_err}")
+
+        line = f"{speaker_label}: {final_transcript}"
 
         # Return a single line so the frontend can build a conversation log
         return {
             "status": "success",
             "speaker": speaker_label,
-            "raw_transcript": transcript,
+            "raw_transcript": final_transcript,
             "line": line,
         }
         
     except requests.exceptions.RequestException as e:
         print(f"Sarvam API Error: {e.response.text if e.response else str(e)}")
         raise HTTPException(status_code=500, detail="Failed to connect to Sarvam AI.")
+
+@app.post("/api/text-to-speech")
+async def text_to_speech(req: dict):
+    """
+    Converts text to speech using Sarvam AI's Bulbul:v1 model.
+    target_language: 'kn-IN', 'en-IN', 'hi-IN'
+    """
+    text = req.get("text")
+    lang = req.get("language_code", "kn-IN")
+    print(f"[DEBUG] /api/text-to-speech called. Text: {text[:50]}..., Lang: {lang}")
+    
+    if not text:
+        raise HTTPException(status_code=400, detail="Text is required")
+    
+    url = "https://api.sarvam.ai/text-to-speech"
+    headers = {"api-subscription-key": SARVAM_API_KEY}
+    
+    # Using 'bulbul:v2' and a valid speaker as per latest Sarvam protocols
+    payload = {
+        "inputs": [text],
+        "target_language_code": lang,
+        "speaker": "anushka", # Valid speaker
+        "pitch": 0,
+        "pace": 1.0,
+        "loudness": 1.5,
+        "speech_sample_rate": 8000,
+        "enable_preprocessing": True,
+        "model": "bulbul:v2"
+    }
+    
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        if response.status_code != 200:
+            print(f"[DEBUG] Sarvam TTS Error Response: {response.text}")
+        response.raise_for_status()
+        res_data = response.json()
+        
+        # Sarvam returns an array of base64 strings in 'audios'
+        audios = res_data.get("audios", [])
+        print(f"[DEBUG] Sarvam TTS Success. Received {len(audios)} audio strings.")
+        audio_base64 = audios[0] if audios else ""
+        
+        return {"status": "success", "audio_base64": audio_base64}
+        
+    except requests.exceptions.RequestException as e:
+        print(f"Sarvam TTS Error: {e.response.text if e.response else str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to generate speech via Sarvam AI.")
 
 @app.post("/api/approve-clinical")
 def approve_clinical_record(record: ClinicalApproval, background_tasks: BackgroundTasks):
@@ -193,6 +266,38 @@ def generate_prescription(req: PrescriptionRequest):
     is unavailable or quota-limited.
     """
     conversation_text = req.conversation_text or ""
+    patient_id = req.patient_id
+
+    # Retrieve patient history if available
+    patient_history = ""
+    if patient_id:
+        try:
+            history_records = []
+            if os.path.exists(DATA_DIR):
+                for filename in os.listdir(DATA_DIR):
+                    if filename.endswith(".json"):
+                        with open(os.path.join(DATA_DIR, filename), 'r') as f:
+                            data = json.load(f)
+                            if data.get("patient_id") == patient_id:
+                                # Extract key clinical info for context
+                                record_summary = {
+                                    "date": data.get("timestamp", "Unknown"),
+                                    "diagnosis": data.get("diagnosis", "N/A"),
+                                    "medication": data.get("medication", "N/A"),
+                                    "symptoms": data.get("symptoms", [])
+                                }
+                                history_records.append(record_summary)
+            
+            if history_records:
+                # Sort by date and take last 3 for context
+                # Assuming timestamp format is sortable or we convert it
+                try:
+                    history_records.sort(key=lambda x: x['date'], reverse=True)
+                except:
+                    pass
+                patient_history = json.dumps(history_records[:3], indent=2)
+        except Exception as e:
+            print(f"Error retrieving patient history: {e}")
 
     # Base structure if no LLM or errors
     structured_info = {
@@ -207,8 +312,12 @@ def generate_prescription(req: PrescriptionRequest):
         import re, time
 
         prompt = f"""You are a medical AI assistant. Extract structured clinical data from this doctor-patient conversation.
+Consider the patient's medical history provided below to ensure clinical consistency.
 
-Conversation:
+### Patient History (Last 3 visits):
+{patient_history if patient_history else "No previous records found."}
+
+### Current Conversation:
 {conversation_text}
 
 Return ONLY a valid JSON object with these exact keys:

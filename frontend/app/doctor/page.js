@@ -13,7 +13,8 @@ export default function DoctorPortal() {
   const [audioChunks, setAudioChunks] = useState([]);
   const [activeSpeaker, setActiveSpeaker] = useState("doctor"); // "doctor" | "patient"
   const activeSpeakerRef = useRef("doctor"); // always tracks latest speaker for use in callbacks
-  const [pendingTranslation, setPendingTranslation] = useState(null);
+  const [pendingAudio, setPendingAudio] = useState(null); // stores base64 audio from Sarvam TTS
+  const [pendingText, setPendingText] = useState(null);
   
   // Processing state
   const [processing, setProcessing] = useState(false);
@@ -24,6 +25,7 @@ export default function DoctorPortal() {
   const [conversation, setConversation] = useState("");
   const [clinicalData, setClinicalData] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [currentPatientId, setCurrentPatientId] = useState("PAT-992");
 
   useEffect(() => {
     // Basic auth check
@@ -74,8 +76,8 @@ export default function DoctorPortal() {
     const formData = new FormData();
     formData.append("file", audioBlob, "consultation.webm");
     formData.append("source_lang", currentSpeaker === "doctor" ? "hi-IN" : "kn-IN");
-    formData.append("target_lang", "en-IN");
-    formData.append("patient_id", "PAT-992");
+    formData.append("target_lang", currentSpeaker === "doctor" ? "kn-IN" : "en-IN");
+    formData.append("patient_id", currentPatientId);
     formData.append("speaker", currentSpeaker);
 
     try {
@@ -91,16 +93,37 @@ export default function DoctorPortal() {
       setTranscript(prev => (prev ? `${prev}\n${newLine}` : newLine));
       setConversation(prev => (prev ? `${prev}\n${newLine}` : newLine));
 
-      // Save the translated text for TTS playback on toggle
+      // Save the translated text/audio for TTS playback on toggle
       if (data.raw_transcript) {
-        setPendingTranslation(data.raw_transcript);
+        setPendingText(data.raw_transcript);
+        
+        // Fetch Sarvam TTS for the *other* person who will hear this
+        // If doctor spoke, generate Kannada audio for patient.
+        // If patient spoke, generate English audio for doctor.
+        const ttsLang = currentSpeaker === "doctor" ? "kn-IN" : "en-IN";
+        try {
+          const ttsRes = await fetch("http://localhost:8000/api/text-to-speech", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              text: data.raw_transcript, 
+              language_code: ttsLang 
+            })
+          });
+          const ttsData = await ttsRes.json();
+          if (ttsData.status === "success") {
+            setPendingAudio(ttsData.audio_base64);
+          }
+        } catch (ttsErr) {
+          console.error("Sarvam TTS generation failed:", ttsErr);
+        }
       }
     } catch (err) {
       setError(err.message);
     } finally {
       setProcessing(false);
     }
-  }, []);
+  }, [currentPatientId]);
 
   // Upload audio automatically once chunks are assembled
   // Pass chunks directly to avoid stale closure on audioChunks state
@@ -115,16 +138,15 @@ export default function DoctorPortal() {
     activeSpeakerRef.current = newSpeaker; // sync ref immediately
     setActiveSpeaker(newSpeaker);
     
-    // Play TTS if there's pending translation
-    if (pendingTranslation && typeof window !== "undefined" && "speechSynthesis" in window) {
+    // Play Sarvam TTS if there's pending audio
+    if (pendingAudio) {
       try {
-        const utter = new SpeechSynthesisUtterance(pendingTranslation);
-        // Kannada if patient selected, English if doctor selected
-        utter.lang = newSpeaker === "patient" ? "kn-IN" : "en-IN";
-        window.speechSynthesis.speak(utter);
-        setPendingTranslation(null); // Clear after playing
+        const audio = new Audio(`data:audio/wav;base64,${pendingAudio}`);
+        audio.play();
+        setPendingAudio(null);
+        setPendingText(null);
       } catch (err) {
-        console.error("TTS playback failed:", err);
+        console.error("Audio playback failed:", err);
       }
     }
   };
@@ -145,7 +167,7 @@ export default function DoctorPortal() {
     setSaving(true);
     try {
       const payload = {
-        patient_id: "PAT-992",
+        patient_id: currentPatientId,
         symptoms: clinicalData.symptoms || [],
         diagnosis: clinicalData.diagnosis,
         medication: clinicalData.medication,
@@ -194,7 +216,29 @@ export default function DoctorPortal() {
         {/* Left Column: Input Control */}
         <div className="space-y-6">
           <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
-            <h2 className="text-lg font-semibold text-white mb-4">Live Patient Consultation</h2>
+            <h2 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
+              <Activity className="w-5 h-5 text-blue-500" />
+              Live Patient Consultation
+            </h2>
+            
+            {/* Patient Confirmation Section */}
+            <div className="mb-6 bg-neutral-950 p-4 rounded-lg border border-neutral-800">
+              <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">Confirm Patient ID</label>
+              <div className="flex gap-3">
+                <input 
+                  type="text" 
+                  value={currentPatientId}
+                  onChange={(e) => setCurrentPatientId(e.target.value.toUpperCase())}
+                  placeholder="e.g. PAT-992"
+                  className="bg-neutral-900 border border-neutral-700 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 outline-none w-full transition-all"
+                />
+                <div className="flex items-center gap-2 px-3 py-2 bg-blue-900/20 text-blue-400 rounded-lg border border-blue-800/50 text-xs whitespace-nowrap">
+                  <CheckCircle className="w-3.5 h-3.5" />
+                  ID Verified
+                </div>
+              </div>
+            </div>
+
             <div className="flex items-center gap-2 mb-4">
               <span className="text-xs text-neutral-400">Active speaker:</span>
               <div className="inline-flex rounded-lg border border-neutral-700 bg-neutral-950 p-0.5">
@@ -290,7 +334,10 @@ export default function DoctorPortal() {
                   const res = await fetch("http://localhost:8000/api/generate-prescription", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ conversation_text: conversation || transcript }),
+                    body: JSON.stringify({ 
+                      conversation_text: conversation || transcript,
+                      patient_id: currentPatientId 
+                    }),
                   });
                   if (!res.ok) throw new Error("Failed to generate prescription from AI");
                   const data = await res.json();

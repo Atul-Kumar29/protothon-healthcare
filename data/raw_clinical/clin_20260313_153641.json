@@ -1,0 +1,11 @@
+{
+    "patient_id": "PAT-992",
+    "symptoms": [],
+    "diagnosis": "fever",
+    "medication": "paracetamol",
+    "dosage": "1day",
+    "lab_tests": [],
+    "raw_transcript": "Yes.",
+    "timestamp": "2026-03-13T10:06:41.414848",
+    "status": "pending_pharmacy"
+}

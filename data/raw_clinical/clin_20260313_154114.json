@@ -1,0 +1,11 @@
+{
+    "patient_id": "PAT-992",
+    "symptoms": [],
+    "diagnosis": "",
+    "medication": "",
+    "dosage": "",
+    "lab_tests": [],
+    "raw_transcript": "Yes.",
+    "timestamp": "2026-03-13T10:11:14.862123",
+    "status": "pending_pharmacy"
+}

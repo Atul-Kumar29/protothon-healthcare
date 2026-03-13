@@ -1,0 +1,11 @@
+{
+    "patient_id": "PAT-992",
+    "symptoms": [],
+    "diagnosis": "General consultation",
+    "medication": "Paracetamol 500mg",
+    "dosage": "1 tablet twice daily after food for 3 days",
+    "lab_tests": [],
+    "raw_transcript": "Hello, what kind of problem do you face? I had a fever, mild fever, around 100 degrees.",
+    "timestamp": "2026-03-13T11:39:33.677294",
+    "status": "pending_pharmacy"
+}

@@ -1,0 +1,14 @@
+{
+    "patient_id": "PAT-992",
+    "symptoms": [
+        "severe stomach ache",
+        "stomach ache near heart area"
+    ],
+    "diagnosis": "Gas problem",
+    "medication": "None",
+    "dosage": "None",
+    "lab_tests": [],
+    "raw_transcript": "Doctor: What kind of problem are you facing?\nPatient: I have a severe stomach ache.\nDoctor: Where are you facing the stomach ache?\nPatient: Near my heart area.\nDoctor: Then it might be gas problem.",
+    "timestamp": "2026-03-13T13:47:02.993598",
+    "status": "pending_pharmacy"
+}

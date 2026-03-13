@@ -1,0 +1,6 @@
+__pycache__/
+venv/
+.env
+*.pyc
+stt_results.txt
+stt_results_ascii.txt

@@ -1,0 +1,12 @@
+{
+    "patient_id": "PAT-003",
+    "symptoms": [],
+    "diagnosis": "Pending - insufficient information",
+    "medication": "None",
+    "dosage": "None",
+    "lab_tests": [],
+    "raw_transcript": "Doctor: \u0ca8\u0cae\u0cb8\u0ccd\u0c95\u0cbe\u0cb0.",
+    "timestamp": "2026-03-14T06:13:18.950939",
+    "status": "dispensed",
+    "pharmacy_status": "dispensed"
+}

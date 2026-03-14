@@ -302,21 +302,21 @@ export default function DoctorPortal() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-200">
-      <nav className="bg-neutral-900 border-b border-neutral-800 px-6 py-4 flex justify-between items-center">
+    <div className="min-h-screen bg-slate-50 text-slate-800">
+      <nav className="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Activity className="text-blue-500 w-6 h-6" />
-          <h1 className="font-bold text-white tracking-wide">Doctor Workstation</h1>
+          <h1 className="font-bold text-slate-900 tracking-wide">Doctor Workstation</h1>
         </div>
         <div className="flex items-center gap-4">
           <button 
             onClick={() => router.push("/laboratory")}
-            className="flex items-center gap-2 px-3 py-1.5 bg-indigo-900/30 text-indigo-400 border border-indigo-800/50 rounded-lg text-sm hover:bg-indigo-900/50 transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-400 border border-indigo-200 rounded-lg text-sm hover:bg-indigo-900/50 transition-colors"
           >
             <FlaskConical className="w-4 h-4" />
             Lab reports
           </button>
-          <span className="text-sm text-neutral-400">Dr. Smith ({user.user_id})</span>
+          <span className="text-sm text-slate-500">Dr. Smith ({user.user_id})</span>
           <button onClick={() => { localStorage.removeItem("clinical_session"); router.push("/"); }} className="text-sm text-red-400 hover:text-red-300">Logout</button>
         </div>
       </nav>
@@ -325,15 +325,15 @@ export default function DoctorPortal() {
         
         {/* Left Column: Input Control */}
         <div className="space-y-6">
-          <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
-            <h2 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
+          <div className="bg-white rounded-xl p-6 border border-slate-200">
+            <h2 className="text-lg font-semibold text-slate-900 mb-2 flex items-center gap-2">
               <Activity className="w-5 h-5 text-blue-500" />
               Live Patient Consultation
             </h2>
             
             {/* Patient Confirmation Section */}
-            <div className="mb-6 bg-neutral-950 p-4 rounded-lg border border-neutral-800">
-              <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">Confirm Patient ID</label>
+            <div className="mb-6 bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Confirm Patient ID</label>
               <div className="flex gap-3">
                 <input 
                   type="text" 
@@ -346,7 +346,7 @@ export default function DoctorPortal() {
                     fetchLabReports(newId);
                   }}
                   placeholder="e.g. PAT-992"
-                  className="bg-neutral-900 border border-neutral-700 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 outline-none w-full transition-all"
+                  className="bg-white border border-slate-300 rounded-lg px-4 py-2 text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none w-full transition-all"
                 />
                 <div className="flex items-center gap-2 px-3 py-2 bg-blue-900/20 text-blue-400 rounded-lg border border-blue-800/50 text-xs whitespace-nowrap">
                   <CheckCircle className="w-3.5 h-3.5" />
@@ -356,13 +356,13 @@ export default function DoctorPortal() {
             </div>
 
             <div className="flex items-center gap-2 mb-4">
-              <span className="text-xs text-neutral-400">Active speaker:</span>
-              <div className="inline-flex rounded-lg border border-neutral-700 bg-neutral-950 p-0.5">
+              <span className="text-xs text-slate-500">Active speaker:</span>
+              <div className="inline-flex rounded-lg border border-slate-300 bg-slate-50 p-0.5">
                 <button
                   type="button"
                   onClick={() => handleSpeakerToggle("doctor")}
                   className={`px-3 py-1 text-xs rounded-md ${
-                    activeSpeaker === "doctor" ? "bg-blue-600 text-white" : "text-neutral-300"
+                    activeSpeaker === "doctor" ? "bg-blue-600 text-white" : "text-slate-700"
                   }`}
                 >
                   Doctor
@@ -371,7 +371,7 @@ export default function DoctorPortal() {
                   type="button"
                   onClick={() => handleSpeakerToggle("patient")}
                   className={`px-3 py-1 text-xs rounded-md ${
-                    activeSpeaker === "patient" ? "bg-emerald-600 text-white" : "text-neutral-300"
+                    activeSpeaker === "patient" ? "bg-emerald-600 text-white" : "text-slate-700"
                   }`}
                 >
                   Patient
@@ -379,7 +379,7 @@ export default function DoctorPortal() {
               </div>
             </div>
 
-            <div className="bg-neutral-950 p-8 rounded-lg border border-neutral-800 flex flex-col items-center justify-center min-h-[250px] shadow-inner relative">
+            <div className="bg-slate-50 p-8 rounded-lg border border-slate-200 flex flex-col items-center justify-center min-h-[250px] shadow-inner relative">
               
               {isRecording && (
                 <div className="absolute top-4 right-4 flex items-center gap-2">
@@ -399,13 +399,13 @@ export default function DoctorPortal() {
                   isRecording 
                     ? "bg-red-500/20 text-red-500 scale-110 border-2 border-red-500" 
                     : processing 
-                      ? "bg-neutral-800 text-neutral-500 cursor-not-allowed"
+                      ? "bg-slate-100 text-slate-400 cursor-not-allowed"
                       : "bg-blue-600 text-white hover:bg-blue-500 hover:scale-105"
                 }`}
               >
                 <Mic className="w-10 h-10" />
               </button>
-              <p className="mt-6 text-sm text-neutral-400 font-medium">
+              <p className="mt-6 text-sm text-slate-500 font-medium">
                 Hold to capture {activeSpeaker === "doctor" ? "doctor" : "patient"} speech
               </p>
             </div>
@@ -414,11 +414,11 @@ export default function DoctorPortal() {
           </div>
 
           {(transcript || processing) && (
-            <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800 shadow-lg">
-              <h3 className="text-sm font-semibold text-neutral-400 mb-3 uppercase tracking-wider">
+            <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-lg">
+              <h3 className="text-sm font-semibold text-slate-500 mb-3 uppercase tracking-wider">
                 Conversation Transcript (Doctor / Patient)
               </h3>
-              <div className="bg-neutral-950 p-4 rounded border border-neutral-800 min-h-[100px] overflow-auto text-sm text-neutral-300 font-mono whitespace-pre-wrap">
+              <div className="bg-slate-50 p-4 rounded border border-slate-200 min-h-[100px] overflow-auto text-sm text-slate-700 font-mono whitespace-pre-wrap">
                 {processing ? (
                   <span className="animate-pulse text-blue-400">Transcribing via Sarvam AI...</span>
                 ) : (
@@ -431,12 +431,12 @@ export default function DoctorPortal() {
 
         {/* Right Column: AI Extraction & Human Validation */}
         <div className="space-y-6">
-          <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800 shadow-lg min-h-[600px] flex flex-col">
-            <h2 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
+          <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-lg min-h-[600px] flex flex-col">
+            <h2 className="text-lg font-semibold text-slate-900 mb-2 flex items-center gap-2">
               <FileText className="w-5 h-5 text-emerald-500" />
               Clinical Extraction Draft
             </h2>
-            <p className="text-sm text-neutral-400 mb-4">
+            <p className="text-sm text-slate-500 mb-4">
               Review the AI-generated JSON wrapper below before pushing to the Pharmacy Pipeline.
             </p>
 
@@ -471,7 +471,7 @@ export default function DoctorPortal() {
             </button>
 
             {!clinicalData ? (
-              <div className="flex-1 flex flex-col items-center justify-center text-neutral-600 space-y-4">
+              <div className="flex-1 flex flex-col items-center justify-center text-slate-400 space-y-4">
                 <AlertCircle className="w-12 h-12 opacity-50" />
                 <p>Awaiting clinical input...</p>
               </div>
@@ -479,42 +479,42 @@ export default function DoctorPortal() {
               <div className="flex-1 space-y-5 overflow-auto pr-2 pb-6">
                 
                 <div>
-                  <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">Diagnosis</label>
+                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Diagnosis</label>
                   <input 
                     type="text" 
                     value={clinicalData.diagnosis === "Pending" ? "" : clinicalData.diagnosis}
                     onChange={(e) => handleInputChange('diagnosis', e.target.value)}
                     placeholder="Enter final diagnosis..."
-                    className="w-full bg-neutral-950 border border-neutral-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">Medication</label>
+                    <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Medication</label>
                     <div className="relative">
-                      <Pill className="w-4 h-4 text-neutral-500 absolute left-3 top-3.5" />
+                      <Pill className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
                       <input 
                         type="text" 
                         value={clinicalData.medication}
                         onChange={(e) => handleInputChange('medication', e.target.value)}
-                        className="w-full bg-neutral-950 border border-neutral-700 rounded-lg p-3 pl-10 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 pl-10 text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none"
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">Dosage</label>
+                    <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Dosage</label>
                     <input 
                       type="text" 
                       value={clinicalData.dosage}
                       onChange={(e) => handleInputChange('dosage', e.target.value)}
-                      className="w-full bg-neutral-950 border border-neutral-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">Reported Symptoms</label>
+                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Reported Symptoms</label>
                   <div className="space-y-2">
                     {clinicalData.symptoms?.map((sym, idx) => (
                       <input 
@@ -522,18 +522,18 @@ export default function DoctorPortal() {
                         type="text" 
                         value={sym}
                         onChange={(e) => handleArrayChange('symptoms', idx, e.target.value)}
-                        className="w-full bg-neutral-950 border border-neutral-700 rounded-lg p-2.5 text-sm text-neutral-300 focus:border-blue-500 outline-none"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm text-slate-700 focus:border-blue-500 outline-none"
                       />
                     ))}
                     {(!clinicalData.symptoms || clinicalData.symptoms.length === 0) && (
-                      <p className="text-xs text-neutral-500 italic">No symptoms extracted.</p>
+                      <p className="text-xs text-slate-400 italic">No symptoms extracted.</p>
                     )}
                   </div>
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider">Requested Lab Tests</label>
+                    <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Requested Lab Tests</label>
                     <button 
                       onClick={() => addArrayItem('lab_tests')}
                       className="text-[10px] text-blue-400 hover:text-blue-300 font-bold"
@@ -548,23 +548,23 @@ export default function DoctorPortal() {
                           type="text" 
                           value={lab}
                           onChange={(e) => handleArrayChange('lab_tests', idx, e.target.value)}
-                          className="w-full bg-neutral-950 border border-neutral-700 rounded-lg p-2.5 text-sm text-neutral-300 focus:border-blue-500 outline-none"
+                          className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm text-slate-700 focus:border-blue-500 outline-none"
                         />
                         <button 
                           onClick={() => removeArrayItem('lab_tests', idx)}
-                          className="p-2 text-neutral-500 hover:text-red-400 transition-colors"
+                          className="p-2 text-slate-400 hover:text-red-400 transition-colors"
                         >
                           <AlertCircle className="w-4 h-4" />
                         </button>
                       </div>
                     ))}
-                    <div className="mt-4 pt-4 border-t border-neutral-800">
-                      <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-2">Quick Request</label>
+                    <div className="mt-4 pt-4 border-t border-slate-200">
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Quick Request</label>
                       <div className="flex gap-2">
                         <select 
                           value={selectedManualTest}
                           onChange={(e) => setSelectedManualTest(e.target.value)}
-                          className="flex-1 bg-neutral-950 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-blue-500 outline-none"
+                          className="flex-1 bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:ring-1 focus:ring-blue-500 outline-none"
                         >
                           <option>Blood Test</option>
                           <option>Sugar Test</option>
@@ -582,7 +582,7 @@ export default function DoctorPortal() {
                       </div>
                     </div>
                     {(!clinicalData.lab_tests || clinicalData.lab_tests.length === 0) && !clinicalData.lab_tests.some(t => t === "") && (
-                      <p className="text-xs text-neutral-500 italic">No lab tests requested.</p>
+                      <p className="text-xs text-slate-400 italic">No lab tests requested.</p>
                     )}
                   </div>
                 </div>
@@ -609,31 +609,31 @@ export default function DoctorPortal() {
           </div>
 
           {/* Patient Lab Reports Section */}
-          <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800 shadow-lg">
-            <h2 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+          <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-lg">
+            <h2 className="text-lg font-semibold text-slate-900 mb-6 flex items-center gap-2">
               <FlaskConical className="w-5 h-5 text-indigo-500" />
               Patient Lab Reports
             </h2>
 
             {labReports.length === 0 ? (
-              <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-8 text-center">
-                <FlaskConical className="w-10 h-10 text-neutral-700 mx-auto mb-3 opacity-50" />
-                <p className="text-sm text-neutral-500 italic">No laboratory reports found for this patient.</p>
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-8 text-center">
+                <FlaskConical className="w-10 h-10 text-slate-300 mx-auto mb-3 opacity-50" />
+                <p className="text-sm text-slate-400 italic">No laboratory reports found for this patient.</p>
               </div>
             ) : (
               <div className="space-y-6">
                 {labReports.map((report) => (
-                  <div key={report.report_id} className="bg-neutral-950 border border-neutral-800 rounded-xl overflow-hidden">
-                    <div className="p-3 bg-neutral-900/50 border-b border-neutral-800 flex justify-between items-center">
+                  <div key={report.report_id} className="bg-slate-50 border border-slate-200 rounded-xl overflow-hidden">
+                    <div className="p-3 bg-white/80 border-b border-slate-200 flex justify-between items-center">
                       <div>
-                        <h3 className="font-bold text-white uppercase text-[11px] tracking-wider">{report.report_type}</h3>
-                        <p className="text-[10px] text-neutral-500 font-mono">{report.date}</p>
+                        <h3 className="font-bold text-slate-900 uppercase text-[11px] tracking-wider">{report.report_type}</h3>
+                        <p className="text-[10px] text-slate-400 font-mono">{report.date}</p>
                       </div>
                       <div className="flex gap-2">
                         {report.file_path && (
                           <button 
                             onClick={() => window.open(`http://localhost:8000/data/raw_clinical/${report.file_path}`, '_blank')}
-                            className="text-[10px] bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-2 py-1 rounded-md font-medium flex items-center gap-1.5 transition-colors border border-neutral-700"
+                            className="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-1 rounded-md font-medium flex items-center gap-1.5 transition-colors border border-slate-300"
                           >
                             <FileText className="w-3 h-3"/>
                             Full Report
@@ -653,13 +653,13 @@ export default function DoctorPortal() {
                     <div className="p-4">
                       <div className="grid grid-cols-1 gap-4">
                         <div className="space-y-2">
-                          <h4 className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Metrics</h4>
+                          <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Metrics</h4>
                           <div className="grid grid-cols-2 gap-2">
                             {report.lab_tests.map((test, i) => (
-                              <div key={i} className="flex flex-col gap-1 bg-neutral-900 p-2 rounded border border-neutral-800">
-                                <span className="text-[11px] text-neutral-400 truncate">{test.test_name}</span>
+                              <div key={i} className="flex flex-col gap-1 bg-white p-2 rounded border border-slate-200">
+                                <span className="text-[11px] text-slate-500 truncate">{test.test_name}</span>
                                 <div className="flex items-center justify-between">
-                                  <span className="text-xs text-white font-bold">{test.value}</span>
+                                  <span className="text-xs text-slate-900 font-bold">{test.value}</span>
                                   <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-black ${
                                     test.status === "NORMAL" ? "text-emerald-500" : 
                                     test.status === "HIGH" || test.status === "LOW" ? "text-amber-500" :
@@ -675,12 +675,12 @@ export default function DoctorPortal() {
 
                         {/* AI Summary Sidebar */}
                         {aiSummaries[report.report_id] && (
-                          <div className="mt-2 pt-3 border-t border-neutral-800">
+                          <div className="mt-2 pt-3 border-t border-slate-200">
                             <h4 className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest flex items-center gap-1.5 mb-2">
                               <Activity className="w-3 h-3" /> AI Insight
                             </h4>
-                            <div className="bg-indigo-950/20 border border-indigo-900/30 rounded-lg p-2.5">
-                              <p className="text-[11px] text-neutral-300 italic mb-2 leading-relaxed">
+                            <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-2.5">
+                              <p className="text-[11px] text-slate-700 italic mb-2 leading-relaxed">
                                 {aiSummaries[report.report_id].summary}
                               </p>
                               <div className="flex gap-4">
@@ -689,7 +689,7 @@ export default function DoctorPortal() {
                                     {aiSummaries[report.report_id].risk_level}
                                   </span>
                                 </span>
-                                <span className="text-[10px] text-neutral-400">
+                                <span className="text-[10px] text-slate-500">
                                   Rec: {aiSummaries[report.report_id].recommendation}
                                 </span>
                               </div>

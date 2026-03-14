@@ -148,14 +148,14 @@ export default function LaboratoryPortal() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-200 p-6">
-      <nav className="max-w-6xl mx-auto mb-8 flex justify-between items-center bg-neutral-900 border border-neutral-800 p-4 rounded-xl">
+    <div className="min-h-screen bg-slate-50 text-slate-800 p-6">
+      <nav className="max-w-6xl mx-auto mb-8 flex justify-between items-center bg-white border border-slate-200 p-4 rounded-xl">
         <div className="flex items-center gap-2">
           <FlaskConical className="text-indigo-500 w-6 h-6" />
-          <h1 className="font-bold text-white tracking-wide text-xl">Laboratory Workstation</h1>
+          <h1 className="font-bold text-slate-900 tracking-wide text-xl">Laboratory Workstation</h1>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-neutral-400">Lab Technician ({user.user_id})</span>
+          <span className="text-sm text-slate-500">Lab Technician ({user.user_id})</span>
           <button onClick={() => { localStorage.removeItem("clinical_session"); router.push("/"); }} className="text-sm text-red-400 hover:text-red-300">Logout</button>
         </div>
       </nav>
@@ -163,19 +163,19 @@ export default function LaboratoryPortal() {
       <main className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Pending Requests Section */}
         <div className="lg:col-span-3">
-          <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800 shadow-xl overflow-hidden mb-8">
-            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-xl overflow-hidden mb-8">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
               <Activity className="w-5 h-5 text-amber-500" />
               Pending Lab Requests from Doctors
             </h2>
             
             {pendingRequests.length === 0 ? (
-              <p className="text-sm text-neutral-500 italic py-4">No pending lab requests at the moment.</p>
+              <p className="text-sm text-slate-400 italic py-4">No pending lab requests at the moment.</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead>
-                    <tr className="border-b border-neutral-800 text-neutral-500">
+                    <tr className="border-b border-slate-200 text-slate-400">
                       <th className="pb-3 font-medium">Patient ID</th>
                       <th className="pb-3 font-medium">Test Type</th>
                       <th className="pb-3 font-medium">Requested By</th>
@@ -183,13 +183,13 @@ export default function LaboratoryPortal() {
                       <th className="pb-3 font-medium text-right">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-neutral-800">
+                  <tbody className="divide-y divide-slate-200">
                     {pendingRequests.map((req) => (
-                      <tr key={req.request_id} className="group hover:bg-neutral-800/30 transition-colors">
+                      <tr key={req.request_id} className="group hover:bg-slate-100/30 transition-colors">
                         <td className="py-4 font-mono text-indigo-400">{req.patient_id}</td>
-                        <td className="py-4 text-white font-medium">{req.test_type}</td>
-                        <td className="py-4 text-neutral-400">{req.requested_by}</td>
-                        <td className="py-4 text-neutral-500">{req.date}</td>
+                        <td className="py-4 text-slate-900 font-medium">{req.test_type}</td>
+                        <td className="py-4 text-slate-500">{req.requested_by}</td>
+                        <td className="py-4 text-slate-400">{req.date}</td>
                         <td className="py-4 text-right">
                           <button 
                             onClick={() => handleGenerateReport(req)}
@@ -209,15 +209,15 @@ export default function LaboratoryPortal() {
 
         {/* Upload Column */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800 shadow-xl">
+          <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-xl">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+              <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
                 <Upload className="w-5 h-5 text-indigo-500" />
                 Upload Lab Results
               </h2>
               <button 
                 onClick={generateDummyData}
-                className="text-xs bg-neutral-800 hover:bg-neutral-700 text-indigo-400 px-3 py-1.5 rounded-lg border border-neutral-700 font-medium transition-colors flex items-center gap-1.5"
+                className="text-xs bg-slate-100 hover:bg-slate-200 text-indigo-400 px-3 py-1.5 rounded-lg border border-slate-300 font-medium transition-colors flex items-center gap-1.5"
               >
                 <Database className="w-3.5 h-3.5" />
                 Generate Dummy Data
@@ -227,35 +227,35 @@ export default function LaboratoryPortal() {
             <form onSubmit={handleUpload} className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-neutral-500 uppercase mb-2">Patient ID</label>
+                  <label className="block text-xs font-semibold text-slate-400 uppercase mb-2">Patient ID</label>
                   <input 
                     type="text" 
                     value={patientId}
                     onChange={(e) => setPatientId(e.target.value.toUpperCase())}
                     placeholder="e.g. PAT-992"
-                    className="w-full bg-neutral-950 border border-neutral-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-neutral-500 uppercase mb-2">Report Type</label>
+                  <label className="block text-xs font-semibold text-slate-400 uppercase mb-2">Report Type</label>
                   <input 
                     type="text" 
                     value={reportType}
                     onChange={(e) => setReportType(e.target.value)}
                     placeholder="e.g. Blood Biochemistry"
-                    className="w-full bg-neutral-950 border border-neutral-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-neutral-400">Test Metrics</h3>
+                <h3 className="text-sm font-semibold text-slate-500">Test Metrics</h3>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm">
                     <thead>
-                      <tr className="border-b border-neutral-800 text-neutral-500">
+                      <tr className="border-b border-slate-200 text-slate-400">
                         <th className="pb-2 font-medium">Test Name</th>
                         <th className="pb-2 font-medium">Value</th>
                         <th className="pb-2 font-medium">Normal Range</th>
@@ -263,7 +263,7 @@ export default function LaboratoryPortal() {
                         <th className="pb-2 w-10"></th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-neutral-800">
+                    <tbody className="divide-y divide-slate-200">
                       {tests.map((test, idx) => (
                         <tr key={idx} className="group">
                           <td className="py-2 pr-2">
@@ -287,14 +287,14 @@ export default function LaboratoryPortal() {
                               type="text" 
                               value={test.normal_range} 
                               onChange={(e) => handleTestChange(idx, "normal_range", e.target.value)}
-                              className="w-full bg-transparent border-none focus:ring-1 focus:ring-indigo-500 rounded p-1 text-neutral-400"
+                              className="w-full bg-transparent border-none focus:ring-1 focus:ring-indigo-500 rounded p-1 text-slate-500"
                             />
                           </td>
                           <td className="py-2 pr-2">
                             <select 
                               value={test.status} 
                               onChange={(e) => handleTestChange(idx, "status", e.target.value)}
-                              className="bg-neutral-950 border border-neutral-800 rounded p-1 text-xs"
+                              className="bg-slate-50 border border-slate-200 rounded p-1 text-xs"
                             >
                               <option value="NORMAL">NORMAL</option>
                               <option value="HIGH">HIGH</option>
@@ -304,7 +304,7 @@ export default function LaboratoryPortal() {
                             </select>
                           </td>
                           <td className="py-2 text-right">
-                            <button type="button" onClick={() => removeTestLine(idx)} className="text-neutral-600 hover:text-red-400">
+                            <button type="button" onClick={() => removeTestLine(idx)} className="text-slate-400 hover:text-red-400">
                               <Trash2 className="w-4 h-4" />
                             </button>
                           </td>
@@ -316,18 +316,18 @@ export default function LaboratoryPortal() {
                 <button 
                   type="button" 
                   onClick={addTestLine}
-                  className="w-full py-2 border border-dashed border-neutral-700 rounded-lg text-xs text-neutral-500 hover:text-indigo-400 hover:border-indigo-400 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-2 border border-dashed border-slate-300 rounded-lg text-xs text-slate-400 hover:text-indigo-400 hover:border-indigo-400 transition-all flex items-center justify-center gap-2"
                 >
                   <Plus className="w-3 h-3" /> Add Test Metric
                 </button>
               </div>
 
-              <div className="p-4 bg-neutral-950 border border-neutral-800 rounded-lg">
-                <label className="block text-xs font-semibold text-neutral-500 uppercase mb-2">Physical Report Attachment (Optional)</label>
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                <label className="block text-xs font-semibold text-slate-400 uppercase mb-2">Physical Report Attachment (Optional)</label>
                 <input 
                   type="file" 
                   onChange={(e) => setFile(e.target.files[0])}
-                  className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-900/30 file:text-indigo-400 hover:file:bg-indigo-900/50"
+                  className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-400 hover:file:bg-indigo-900/50"
                 />
               </div>
 
@@ -346,36 +346,36 @@ export default function LaboratoryPortal() {
 
         {/* Recent Reports Column */}
         <div className="space-y-6">
-          <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800 shadow-xl overflow-hidden">
-            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-neutral-400" />
+          <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-xl overflow-hidden">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-slate-500" />
               Recent for {patientId || "..."}
             </h2>
             
             <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
               {reports.length === 0 ? (
-                <div className="text-center py-10 text-neutral-600">
+                <div className="text-center py-10 text-slate-400">
                   <Database className="w-10 h-10 mx-auto mb-2 opacity-20" />
                   <p className="text-sm">No reports on record</p>
                 </div>
               ) : (
                 reports.map((rep, idx) => (
-                  <div key={idx} className="bg-neutral-950 border border-neutral-800 rounded-lg p-4 hover:border-neutral-600 transition-colors">
+                  <div key={idx} className="bg-slate-50 border border-slate-200 rounded-lg p-4 hover:border-slate-400 transition-colors">
                     <div className="flex justify-between items-start mb-2">
                       <span className="text-xs font-bold text-indigo-400 uppercase">{rep.report_type}</span>
-                      <span className="text-[10px] text-neutral-500">{rep.date}</span>
+                      <span className="text-[10px] text-slate-400">{rep.date}</span>
                     </div>
-                    <p className="text-xs text-neutral-300 font-mono mb-2">ID: {rep.report_id}</p>
+                    <p className="text-xs text-slate-700 font-mono mb-2">ID: {rep.report_id}</p>
                     <div className="space-y-1">
                       {rep.lab_tests.slice(0, 2).map((test, i) => (
                         <div key={i} className="flex justify-between text-[11px]">
-                          <span className="text-neutral-500">{test.test_name}</span>
-                          <span className={test.status !== "NORMAL" ? "text-amber-500 font-bold" : "text-neutral-300"}>
+                          <span className="text-slate-400">{test.test_name}</span>
+                          <span className={test.status !== "NORMAL" ? "text-amber-500 font-bold" : "text-slate-700"}>
                             {test.value}
                           </span>
                         </div>
                       ))}
-                      {rep.lab_tests.length > 2 && <p className="text-[10px] text-neutral-600">+{rep.lab_tests.length - 2} more tests</p>}
+                      {rep.lab_tests.length > 2 && <p className="text-[10px] text-slate-400">+{rep.lab_tests.length - 2} more tests</p>}
                     </div>
                   </div>
                 ))

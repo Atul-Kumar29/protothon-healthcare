@@ -196,11 +196,11 @@ export default function PatientPortal() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-200">
-      <nav className="bg-neutral-900 border-b border-neutral-800 px-6 py-4 flex justify-between items-center">
+    <div className="min-h-screen bg-slate-50 text-slate-800">
+      <nav className="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <User className="text-emerald-500 w-6 h-6" />
-          <h1 className="font-bold text-white tracking-wide">Patient Portal</h1>
+          <h1 className="font-bold text-slate-900 tracking-wide">Patient Portal</h1>
         </div>
         <div className="flex items-center gap-4">
           <span className="text-sm font-medium text-emerald-400">ID: {user.user_id}</span>
@@ -211,12 +211,12 @@ export default function PatientPortal() {
       <main className="max-w-4xl mx-auto p-6 mt-8">
         {/* Live translation strip */}
         <div className="mb-8 grid gap-4 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1.7fr)] items-start">
-          <div className="bg-neutral-900 rounded-xl p-4 border border-neutral-800">
-            <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+          <div className="bg-white rounded-xl p-4 border border-slate-200">
+            <h3 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
               <Activity className="w-4 h-4 text-emerald-500" />
               Live Conversation (Patient Side)
             </h3>
-            <p className="text-xs text-neutral-500 mb-4">
+            <p className="text-xs text-slate-400 mb-4">
               Hold the button and speak in your native language to hear the translated response.
             </p>
             <div className="flex flex-col items-center justify-center gap-4 py-4">
@@ -238,13 +238,13 @@ export default function PatientPortal() {
               {error && <p className="text-xs text-red-400 text-center">{error}</p>}
             </div>
           </div>
-          <div className="bg-neutral-900 rounded-xl p-4 border border-neutral-800 min-h-[120px]">
-            <h3 className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">
+          <div className="bg-white rounded-xl p-4 border border-slate-200 min-h-[120px]">
+            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
               Translated Line
             </h3>
-            <div className="bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-neutral-200 min-h-[64px]">
+            <div className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 min-h-[64px]">
               {liveTranscript || (
-                <span className="text-neutral-500">Your translated text will appear here.</span>
+                <span className="text-slate-400">Your translated text will appear here.</span>
               )}
             </div>
           </div>
@@ -254,21 +254,21 @@ export default function PatientPortal() {
         <div className="mb-12">
           <div className="flex items-center gap-2 mb-6">
             <FlaskConical className="w-6 h-6 text-indigo-500" />
-            <h2 className="text-xl font-bold text-white">Laboratory Reports</h2>
+            <h2 className="text-xl font-bold text-slate-900">Laboratory Reports</h2>
           </div>
 
           {labReports.length === 0 ? (
-            <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-6 text-center text-neutral-500">
+            <div className="bg-white/80 border border-slate-200 rounded-xl p-6 text-center text-slate-400">
               <p className="text-sm italic">No laboratory reports available yet.</p>
             </div>
           ) : (
             <div className="grid gap-6">
               {labReports.map((report) => (
-                <div key={report.report_id} className="bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden">
-                  <div className="p-4 bg-neutral-800/50 border-b border-neutral-800 flex justify-between items-center">
+                <div key={report.report_id} className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                  <div className="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
                     <div>
-                      <h3 className="font-bold text-white uppercase text-sm tracking-wider">{report.report_type}</h3>
-                      <p className="text-[10px] text-neutral-500 font-mono mt-0.5">{report.report_id} • {report.date}</p>
+                      <h3 className="font-bold text-slate-900 uppercase text-sm tracking-wider">{report.report_type}</h3>
+                      <p className="text-[10px] text-slate-400 font-mono mt-0.5">{report.report_id} • {report.date}</p>
                     </div>
                     <button 
                       onClick={() => analyzeLabReport(report)}
@@ -283,17 +283,17 @@ export default function PatientPortal() {
                   <div className="p-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-3">
-                        <h4 className="text-[11px] font-bold text-neutral-500 uppercase tracking-widest">Test Metrics</h4>
+                        <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Test Metrics</h4>
                         <div className="space-y-2">
                           {report.lab_tests.map((test, i) => (
-                            <div key={i} className="flex items-center justify-between text-sm bg-neutral-950 p-2 rounded border border-neutral-800">
-                              <span className="text-neutral-400">{test.test_name}</span>
+                            <div key={i} className="flex items-center justify-between text-sm bg-slate-50 p-2 rounded border border-slate-200">
+                              <span className="text-slate-500">{test.test_name}</span>
                               <div className="flex items-center gap-3">
-                                <span className="text-white font-medium">{test.value}</span>
+                                <span className="text-slate-900 font-medium">{test.value}</span>
                                 <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                                  test.status === "NORMAL" ? "bg-emerald-900/20 text-emerald-500 border border-emerald-900/50" : 
-                                  test.status === "HIGH" || test.status === "LOW" ? "bg-amber-900/20 text-amber-500 border border-amber-900/50" :
-                                  test.status === "FAIL" ? "bg-red-900/20 text-red-500 border border-red-900/50" : "bg-neutral-800 text-neutral-400"
+                                  test.status === "NORMAL" ? "bg-emerald-50 text-emerald-500 border border-emerald-200" : 
+                                  test.status === "HIGH" || test.status === "LOW" ? "bg-amber-50 text-amber-500 border border-amber-200" :
+                                  test.status === "FAIL" ? "bg-red-50 text-red-500 border border-red-200" : "bg-slate-100 text-slate-500"
                                 }`}>
                                   {test.status}
                                 </span>
@@ -308,11 +308,11 @@ export default function PatientPortal() {
                         <h4 className="text-[11px] font-bold text-indigo-400 uppercase tracking-widest flex items-center gap-1.5">
                           <Activity className="w-3.5 h-3.5" /> AI Insight
                         </h4>
-                        <div className="bg-indigo-950/20 border border-indigo-900/30 rounded-lg p-3 min-h-[100px]">
+                        <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-3 min-h-[100px]">
                           {aiSummaries[report.report_id] ? (
                             <div className="space-y-4">
-                              <p className="text-sm text-neutral-200 italic leading-relaxed">
-                                "{aiSummaries[report.report_id].summary}"
+                              <p className="text-sm text-slate-800 italic leading-relaxed">
+                              &quot;{aiSummaries[report.report_id].summary}&quot;
                               </p>
                               <div className="flex gap-4">
                                 <div>
@@ -326,14 +326,14 @@ export default function PatientPortal() {
                                 </div>
                                 <div>
                                   <p className="text-[10px] text-indigo-400 uppercase font-bold mb-1">Recommendation</p>
-                                  <p className="text-xs text-neutral-300">
+                                  <p className="text-xs text-slate-700">
                                     {aiSummaries[report.report_id].recommendation}
                                   </p>
                                 </div>
                               </div>
                             </div>
                           ) : (
-                            <div className="flex flex-col items-center justify-center h-full text-neutral-600 py-6">
+                            <div className="flex flex-col items-center justify-center h-full text-slate-400 py-6">
                               <FileText className="w-8 h-8 opacity-20 mb-2" />
                               <p className="text-xs">Click AI Summary to analyze these results</p>
                             </div>
@@ -350,13 +350,13 @@ export default function PatientPortal() {
 
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-bold text-white">Clinical Timeline</h2>
-            <p className="text-neutral-400 mt-1">Your recent visits, diagnoses, and prescriptions.</p>
+            <h2 className="text-2xl font-bold text-slate-900">Clinical Timeline</h2>
+            <p className="text-slate-500 mt-1">Your recent visits, diagnoses, and prescriptions.</p>
           </div>
           <button 
             onClick={() => fetchTimeline(user.user_id)}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 rounded-lg text-sm transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg text-sm transition-colors"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             Refresh
@@ -364,17 +364,17 @@ export default function PatientPortal() {
         </div>
 
         {loading && records.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-12 text-neutral-500">
+          <div className="flex flex-col items-center justify-center p-12 text-slate-400">
             <RefreshCw className="w-8 h-8 animate-spin mb-4" />
             <p>Loading historical records from Delta Lake...</p>
           </div>
         ) : records.length === 0 ? (
-          <div className="bg-neutral-900 rounded-xl p-8 border border-neutral-800 text-center">
-            <Search className="w-12 h-12 text-neutral-600 mx-auto mb-4" />
-            <p className="text-neutral-400">No clinical records found for your ID.</p>
+          <div className="bg-white rounded-xl p-8 border border-slate-200 text-center">
+            <Search className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+            <p className="text-slate-500">No clinical records found for your ID.</p>
           </div>
         ) : (
-          <div className="relative border-l border-neutral-800 ml-4 space-y-12 pb-12">
+          <div className="relative border-l border-slate-200 ml-4 space-y-12 pb-12">
             {records.map((record, idx) => {
               const date = new Date(record.timestamp);
               const formattedDate = date.toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric' });
@@ -385,28 +385,28 @@ export default function PatientPortal() {
               return (
                 <div key={idx} className="relative pl-8">
                   {/* Timeline Node */}
-                  <div className="absolute -left-3.5 top-1 w-7 h-7 rounded-full bg-neutral-900 border-2 border-emerald-500 flex items-center justify-center">
+                  <div className="absolute -left-3.5 top-1 w-7 h-7 rounded-full bg-white border-2 border-emerald-500 flex items-center justify-center">
                     <Activity className="w-3.5 h-3.5 text-emerald-500" />
                   </div>
                   
                   {/* Card Content */}
-                  <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="bg-white/80 border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
                     
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3">
-                        <div className="bg-neutral-950 p-2 rounded-lg border border-neutral-800">
-                          <Clock className="w-5 h-5 text-neutral-400" />
+                        <div className="bg-slate-50 p-2 rounded-lg border border-slate-200">
+                          <Clock className="w-5 h-5 text-slate-500" />
                         </div>
                         <div>
-                          <p className="text-white font-medium">{formattedDate}</p>
-                          <p className="text-xs text-neutral-500">{formattedTime}</p>
+                          <p className="text-slate-900 font-medium">{formattedDate}</p>
+                          <p className="text-xs text-slate-400">{formattedTime}</p>
                         </div>
                       </div>
                       
                       <div className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 border ${
                         isFulfilled 
-                          ? "bg-emerald-900/30 text-emerald-400 border-emerald-800/50" 
-                          : "bg-amber-900/30 text-amber-500 border-amber-800/50"
+                          ? "bg-emerald-50 text-emerald-400 border-emerald-200" 
+                          : "bg-amber-50 text-amber-500 border-amber-200"
                       }`}>
                         {isFulfilled ? <CheckCircle className="w-3.5 h-3.5" /> : <AlertCircle className="w-3.5 h-3.5" />}
                         Medication: {isFulfilled ? "Dispensed" : "Pending Pharmacy"}
@@ -418,17 +418,17 @@ export default function PatientPortal() {
                       {/* Clinical Notes */}
                       <div className="space-y-4">
                         <div>
-                          <h4 className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                          <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
                             <FileText className="w-3.5 h-3.5" /> Diagnosis
                           </h4>
-                          <p className="text-sm text-neutral-300 bg-neutral-950 p-3 rounded-md border border-neutral-800">
+                          <p className="text-sm text-slate-700 bg-slate-50 p-3 rounded-md border border-slate-200">
                             {record.diagnosis || "Not specified."}
                           </p>
                         </div>
                         
                         <div>
-                          <h4 className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1">Reported Symptoms</h4>
-                          <ul className="text-sm text-neutral-400 list-disc list-inside bg-neutral-950 p-3 rounded-md border border-neutral-800">
+                          <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Reported Symptoms</h4>
+                          <ul className="text-sm text-slate-500 list-disc list-inside bg-slate-50 p-3 rounded-md border border-slate-200">
                             {record.symptoms && record.symptoms.length > 0 
                               ? record.symptoms.map((s, i) => <li key={i}>{s}</li>)
                               : <li>No notable symptoms.</li>
@@ -439,13 +439,13 @@ export default function PatientPortal() {
 
                       {/* Prescriptions & Labs */}
                       <div className="space-y-4">
-                        <div className="bg-blue-950/20 border border-blue-900/30 p-4 rounded-lg">
+                        <div className="bg-blue-50 border border-blue-100 p-4 rounded-lg">
                           <h4 className="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
                             <Pill className="w-3.5 h-3.5" /> Prescription
                           </h4>
                           
-                          <div className="flex justify-between items-center border-b border-blue-900/30 pb-2 mb-2">
-                            <span className="text-sm text-neutral-300 font-medium">{record.medication || "None"}</span>
+                          <div className="flex justify-between items-center border-b border-blue-100 pb-2 mb-2">
+                            <span className="text-sm text-slate-700 font-medium">{record.medication || "None"}</span>
                           </div>
                           <div className="flex justify-between items-center text-sm">
                             <span className="text-blue-500/70">Dosage:</span>
@@ -455,10 +455,10 @@ export default function PatientPortal() {
 
                         {record.lab_tests && record.lab_tests.length > 0 && (
                           <div>
-                            <h4 className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1">Requested Labs</h4>
+                            <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Requested Labs</h4>
                             <div className="flex flex-wrap gap-2 text-xs">
                               {record.lab_tests.map((lab, i) => (
-                                <span key={i} className="bg-neutral-800 text-neutral-300 px-2 py-1 rounded border border-neutral-700">
+                                <span key={i} className="bg-slate-100 text-slate-700 px-2 py-1 rounded border border-slate-300">
                                   {lab}
                                 </span>
                               ))}

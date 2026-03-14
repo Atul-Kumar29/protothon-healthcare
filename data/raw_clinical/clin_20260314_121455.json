@@ -1,0 +1,12 @@
+{
+    "patient_id": "PAT-001",
+    "symptoms": [],
+    "diagnosis": "General consultation",
+    "medication": "Paracetamol 500mg",
+    "dosage": "1 tablet twice daily after food for 3 days",
+    "lab_tests": [],
+    "raw_transcript": "Doctor: \u0ca8\u0cae\u0cb8\u0ccd\u0c95\u0cbe\u0cb0, \u0ca8\u0cc0\u0cb5\u0cc1 \u0caf\u0cbe\u0cb5 \u0cb8\u0cae\u0cb8\u0ccd\u0caf\u0cc6\u0caf\u0ca8\u0ccd\u0ca8\u0cc1 \u0c8e\u0ca6\u0cc1\u0cb0\u0cbf\u0cb8\u0cc1\u0ca4\u0ccd\u0ca4\u0cbf\u0ca6\u0ccd\u0ca6\u0cc0\u0cb0\u0cbf?\nPatient: I had a fever for a few days.\nDoctor: \u0ca8\u0cbf\u0cae\u0c97\u0cc6 \u0c8e\u0cb7\u0ccd\u0c9f\u0cc1 \u0ca6\u0cbf\u0ca8\u0c97\u0cb3\u0cbf\u0c82\u0ca6 \u0c9c\u0ccd\u0cb5\u0cb0\u0cb5\u0cbf\u0ca4\u0ccd\u0ca4\u0cc1?\nPatient: Two days ago.",
+    "timestamp": "2026-03-14T06:44:55.560401",
+    "status": "dispensed",
+    "pharmacy_status": "dispensed"
+}

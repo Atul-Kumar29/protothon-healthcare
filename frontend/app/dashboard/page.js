@@ -32,28 +32,28 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 p-4 md:p-8">
+    <div className="min-h-screen bg-slate-50 text-white p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-white">Clinical Records Dashboard</h1>
-            <p className="text-neutral-400 mt-1">Search and review clinical voice logs by patient.</p>
+            <h1 className="text-3xl font-bold tracking-tight text-slate-900">Clinical Records Dashboard</h1>
+            <p className="text-slate-500 mt-1">Search and review clinical voice logs by patient.</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-            <div className="flex items-center gap-2 bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 w-full sm:w-64">
-              <Search className="w-4 h-4 text-neutral-500" />
+            <div className="flex items-center gap-2 bg-white border border-slate-300 rounded-lg px-3 py-2 w-full sm:w-64">
+              <Search className="w-4 h-4 text-slate-400" />
               <input
                 type="text"
                 value={patientFilter}
                 onChange={(e) => setPatientFilter(e.target.value)}
                 placeholder="Filter by Patient ID (e.g. PAT-992)"
-                className="bg-transparent outline-none text-sm text-neutral-100 flex-1 placeholder:text-neutral-500"
+                className="bg-transparent outline-none text-sm text-slate-900 flex-1 placeholder:text-slate-400"
               />
             </div>
             <button 
               onClick={() => fetchDashboardData(patientFilter.trim() || undefined)}
               disabled={loading}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-lg transition-colors border border-neutral-700 disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-white rounded-lg transition-colors border border-slate-300 disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
               {patientFilter.trim() ? "Search" : "Refresh Logs"}
@@ -68,10 +68,10 @@ export default function DashboardPage() {
           </div>
         )}
 
-        <div className="bg-neutral-900 rounded-xl border border-neutral-800 overflow-hidden shadow-xl">
+        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm whitespace-nowrap">
-              <thead className="bg-neutral-950/50 text-neutral-400">
+              <thead className="bg-slate-50/50 text-slate-500">
                 <tr>
                   <th className="px-6 py-4 font-medium">Date/Time</th>
                   <th className="px-6 py-4 font-medium">Patient ID</th>
@@ -80,10 +80,10 @@ export default function DashboardPage() {
                   <th className="px-6 py-4 font-medium">Diagnosis</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-800">
+              <tbody className="divide-y divide-slate-200">
                 {loading && audits.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-neutral-500">
+                    <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
                       Loading clinical records...
                     </td>
                   </tr>
@@ -91,10 +91,10 @@ export default function DashboardPage() {
                   <tr>
                     <td colSpan={5} className="px-6 py-12 text-center">
                       <div className="space-y-4">
-                        <p className="text-neutral-400">
+                        <p className="text-slate-500">
                           No clinical records found.
                         </p>
-                        <div className="text-sm text-neutral-500 space-y-2">
+                        <div className="text-sm text-slate-400 space-y-2">
                           <p>Possible reasons:</p>
                           <ul className="list-disc list-inside text-left max-w-md mx-auto">
                             <li>No audio files uploaded yet</li>
@@ -122,12 +122,12 @@ export default function DashboardPage() {
                     return (
                       <tr 
                         key={idx} 
-                        className="hover:bg-neutral-800/50 transition-colors"
+                        className="hover:bg-slate-50 transition-colors"
                       >
-                        <td className="px-6 py-4 text-neutral-300">
+                        <td className="px-6 py-4 text-slate-700">
                           {audit.timestamp || "N/A"}
                         </td>
-                        <td className="px-6 py-4 font-mono text-neutral-300">
+                        <td className="px-6 py-4 font-mono text-slate-700">
                           {audit.patient_id || "N/A"}
                         </td>
                         <td className="px-6 py-4 max-w-md truncate" title={audit.raw_transcript || ""}>
@@ -145,12 +145,12 @@ export default function DashboardPage() {
                               {status}
                             </div>
                           ) : (
-                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-800 text-neutral-400 border border-neutral-700 text-xs font-semibold">
+                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 border border-slate-300 text-xs font-semibold">
                               {status}
                             </div>
                           )}
                         </td>
-                        <td className="px-6 py-4 text-neutral-300">
+                        <td className="px-6 py-4 text-slate-700">
                           {audit.diagnosis || "Pending"}
                         </td>
                       </tr>
